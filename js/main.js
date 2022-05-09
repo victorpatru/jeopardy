@@ -94,8 +94,45 @@ function buildCategories() {
     const allData = Promise.all([fetchReq1,fetchReq2,fetchReq3,fetchReq4,fetchReq5,fetchReq6])
 
     allData.then((res) => {
-        console.log(res)
+        catArray = res
     })
 
     // Ultimately we get six categories formatted as objects that we store in the catArray variable for use further down the road
+}
+
+// Reset the board function
+function resetBoard() {
+    // If there exists a child element nested within the section with the class name of "clue-board" or "category-row"; remove them
+    let clueParent = document.getElementById('clue-board')
+    let catParent = document.getElementById('category-row')
+
+    while (clueParent.firstChild) {
+        clueParent.removeChild(clueParent.firstChild)
+    }
+    while (catParent.firstChild) {
+        catParent.removeChild(catParent.firstChild)
+    }
+
+    // Reset score
+    document.getElementById('score').innerText = 0
+
+    // After having cleared the board, reinitialize the whole board (including the category row)
+    initBoard()
+    initCatRow()
+
+}
+
+// Display in the DOM the categories chosen by the user
+
+function setCategories(catArray) {
+    let element = document.getElementById('category-row')
+    // Sets the children variable equal to all the children of the section with the class name "category-row"
+    let children = element.children
+
+    // Loop through all of category boxes and add the title into the DOM
+    for (let i = 0; i < children.length; i++) {
+        children[i].innerHTML = catArray[i].title
+    }
+
+
 }
