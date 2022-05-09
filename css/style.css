@@ -60,6 +60,10 @@ span {
 }
 
 #clue-board {
+  flex-direction: column;
+}
+
+.clue-row {
   display: flex;
 }
 
