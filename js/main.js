@@ -73,7 +73,7 @@ let catArray = []
 
 function buildCategories() {
     // If there are already categories displayed in the DOM (on the first row) then reset the board when running this function
-    if (!document.getElementById('category-row').firstChild.innerText === '') {
+    if (!(document.getElementById('category-row').firstChild.innerText == '')) {
         resetBoard()
     }
 
@@ -137,6 +137,7 @@ function setCategories(catArray) {
 
 }
 
+// Match the clicked box with the appropriate clue value 
 
 function getClue(event) {
     // Add the class list of "clicked-box" to the box the user clicked
@@ -158,5 +159,52 @@ function getClue(event) {
         return obj.value == boxValue
     })
 
-    console.log(clue)
+    showQuestion(clue, child, boxValue)
+}
+
+function showQuestion(clue, target, boxValue) {
+    // Use the question clue from the API and showcase it to the user as a prompt
+    let userAnswer = prompt(clue.question).toLowerCase()
+
+    // Get the correct answer off of the object we got back from the Jeopardy API. Apply some regex to standardize the output
+    let correctAnswer = clue.answer.toLowerCase().replace(/<\/?[^>]+(>|$)/g, "")
+
+    // Force type conversion to Number (using the unary operator)
+    let possiblePoints = +(boxValue)
+
+    // Change the HTML of the box to the answer
+    target.innerHTML = clue.answer
+
+    // To make sure further clicks on the box will not run the whole process again, remove the event listener
+    target.removeEventListener('click', getClue, false)
+
+    evaluateAnswer(userAnswer, correctAnswer, possiblePoints)
+}
+
+// Evaluate answer
+function evaluateAnswer(userAnswer, correctAnswer, possiblePoints) {
+    // Check whether user input matches correct answer
+    let checkAnswer = (userAnswer == correctAnswer) ? 'correct' : 'incorrect'
+
+    // Ensuring edge case where user's answer is the correct one but our input cleaning efforts don't succeed
+    let confirmAnswer = confirm(`For $${possiblePoints}, you answered "${userAnswer}", and the correct answer was "${correctAnswer}". Your answer appears to be ${checkAnswer}. Click OK to accept or click Cancel if the answer was not properly evaluated.`)
+
+    awardPoints(checkAnswer, confirmAnswer, possiblePoints)
+}
+
+// Award Points
+function awardPoints(checkAnswer, confirmAnswer, possiblePoints) {
+    // Award points in all cases besides the one where the answer is incorrect and the user confirms it
+    if(!(checkAnswer == 'incorrect' && confirmAnswer == true)) {
+        // Get the DOM element for score counting element 
+        let target = document.getElementById('score')
+        // Get the score that is already in the DOM
+        let currentScore = +(target.innerText)
+        // Append the value from the object we get from the API
+        currentScore += possiblePoints
+        // Update the score in the DOM
+        target.innerText = currentScore
+    } else {
+        alert('No points awarded!')
+    }
 }
