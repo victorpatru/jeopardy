@@ -49,12 +49,15 @@ function initBoard() {
             // Add the box the class name of 'clue-box'
             box.className = 'clue-box'
             // Put the dollar value of the box inside the box div element
-            box.textContent = `$ ${boxValue}`
+            box.textContent = '$' + boxValue
 
-            box.addEventListener('click', getClue, false)
+            // Add event listener to each box that runs the getClue function when its clicked
+            // box.addEventListener('click', getClue, false)
 
             // Append all the 6 boxes we have create to the current row (6 boxes per 1 row (iteration))
             row.appendChild(box)
         }
+
+        board.appendChild(row)
     }
 }
