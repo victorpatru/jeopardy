@@ -52,7 +52,7 @@ function initBoard() {
             box.textContent = '$' + boxValue
 
             // Add event listener to each box that runs the getClue function when its clicked
-            // box.addEventListener('click', getClue, false)
+            box.addEventListener('click', getClue, false)
 
             // Append all the 6 boxes we have create to the current row (6 boxes per 1 row (iteration))
             row.appendChild(box)
@@ -95,6 +95,7 @@ function buildCategories() {
 
     allData.then((res) => {
         catArray = res
+        setCategories(catArray)
     })
 
     // Ultimately we get six categories formatted as objects that we store in the catArray variable for use further down the road
@@ -122,7 +123,7 @@ function resetBoard() {
 
 }
 
-// Display in the DOM the categories chosen by the user
+// Display categories on the board (DOM)
 
 function setCategories(catArray) {
     let element = document.getElementById('category-row')
@@ -134,5 +135,28 @@ function setCategories(catArray) {
         children[i].innerHTML = catArray[i].title
     }
 
+}
 
+
+function getClue(event) {
+    // Add the class list of "clicked-box" to the box the user clicked
+    let child = event.currentTarget
+    child.classList.add('clicked-box')
+
+    // Get the dollar value inside of the clicked box (minus the $ character)
+    let boxValue = child.innerHTML.slice(1)
+
+    // Look up the index of the children element to figure out which category the clicked box belongs to
+    let parent = child.parentNode
+    let index = Array.prototype.findIndex.call(parent.children, (c) => c === child)
+
+    // Using the index of the box we clicked store the clues for the corresponding box inside the variables cluesList
+    let cluesList = catArray[index].clues
+
+    // Make sure to match the clue to the dollar value chosen by the user ($200 clue is different than $1000 clue)
+    let clue = cluesList.find(obj => {
+        return obj.value == boxValue
+    })
+
+    console.log(clue)
 }
