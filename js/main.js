@@ -61,3 +61,41 @@ function initBoard() {
         board.appendChild(row)
     }
 }
+
+// Calling the Jeopardy API
+
+// Getting a random number between 1 and 181418 (corresponding to all the possible set of values we can request from the Jeopardy API)
+function randInt() {
+    return Math.floor(Math.random() * (18418) + 1)
+}
+
+let catArray = []
+
+function buildCategories() {
+    // If there are already categories displayed in the DOM (on the first row) then reset the board when running this function
+    if (!document.getElementById('category-row').firstChild.innerText === '') {
+        resetBoard()
+    }
+
+    // Making six separate requests with random categories which are stored in six different fetchReq variables
+    const fetchReq1 = fetch(`https://jservice.io/api/category?&id=${randInt()}`).then(res => res.json())
+
+    const fetchReq2 = fetch(`https://jservice.io/api/category?&id=${randInt()}`).then(res => res.json())
+
+    const fetchReq3 = fetch(`https://jservice.io/api/category?&id=${randInt()}`).then(res => res.json())
+
+    const fetchReq4 = fetch(`https://jservice.io/api/category?&id=${randInt()}`).then(res => res.json())
+
+    const fetchReq5 = fetch(`https://jservice.io/api/category?&id=${randInt()}`).then(res => res.json())
+
+    const fetchReq6 = fetch(`https://jservice.io/api/category?&id=${randInt()}`).then(res => res.json())
+
+    // We wait for all the fetches to return back our desired information before using it further down our codebase
+    const allData = Promise.all([fetchReq1,fetchReq2,fetchReq3,fetchReq4,fetchReq5,fetchReq6])
+
+    allData.then((res) => {
+        console.log(res)
+    })
+
+    // Ultimately we get six categories formatted as objects that we store in the catArray variable for use further down the road
+}
