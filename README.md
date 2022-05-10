@@ -1,4 +1,4 @@
-## 🏆 Jeopardy Clone
+# 🏆 Jeopardy Clone
 Test your knowledge and win cash prizes
 
 ### 💻 Technologies used
